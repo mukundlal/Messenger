@@ -42,6 +42,7 @@ class NewMessegeActivity : AppCompatActivity() {
 
     companion object{
         val USER_KEY = "USER_KEY"
+        val USER_ID_KEY = "USER_ID"
     }
 
     private  fun fetchUsers(){
@@ -66,7 +67,7 @@ class NewMessegeActivity : AppCompatActivity() {
                     val intent =Intent(view.context, ChatLogActivity::class.java )
                     intent.putExtra(USER_KEY, userItem.user.username)
 
-                    intent.putExtra(USER_KEY, userItem.user)
+                    intent.putExtra(USER_ID_KEY, userItem.user.uid)
                     startActivity(intent)
 
                     finish()

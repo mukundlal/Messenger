@@ -3,7 +3,7 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="match_parent" android:background="#EFE5E1E5">
+                                                   android:layout_height="match_parent" android:background="#EFDDDADD">
     <EditText
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -43,7 +43,7 @@
     <TextView
             android:text="Not yet a member? Register"
             android:paddingLeft="16dp"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="#541C2E"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_width="0dp"

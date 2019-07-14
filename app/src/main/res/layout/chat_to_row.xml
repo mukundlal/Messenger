@@ -10,14 +10,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
-            android:id="@+id/textView"
+            android:id="@+id/textview_from_row"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/rounded_edittext_login"
+            android:background="@color/colorAccent"
             android:padding="16dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.948"/>
+            app:layout_constraintHorizontal_bias="0.683"/>
+    <TextView
+            android:text="me"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:paddingTop="28dp"
+            android:textStyle="bold"
+            android:paddingLeft="6dp"
+            android:id="@+id/textview_me"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/textview_from_row"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
