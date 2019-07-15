@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.example.messenger.NewMessegeActivity.Companion.USER_ID_KEY
 import com.example.messenger.NewMessegeActivity.Companion.USER_KEY
 import com.example.messenger.messeges.ChatLogActivity
 import com.example.messenger.models.ChatMessage
@@ -26,31 +27,22 @@ companion object{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messege)
-
-
-
         recyclerview_latest_messeges.adapter = adapter
         recyclerview_latest_messeges.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         //set item click listenr on ur adapter
         adapter.setOnItemClickListener { item, view ->
             Log.d(TAG, "123")
             val intent = Intent (this, ChatLogActivity::class.java)
-
-
-
             val row = item as Latestmessege
-
-            intent.putExtra(NewMessegeActivity.USER_KEY, row.chatPartnerUser)
+            //FIXME put string parameter changed
+            intent.putExtra(USER_KEY, row.chatPartnerUser!!.username)
+            intent.putExtra(USER_ID_KEY, row.chatPartnerUser!!.uid)
             startActivity(intent)
         }
 
 //        setupDummyRows()
         listenForLatestmesseges()
-
-
-
-
-       verifyUserIsLoggedIn()
+        verifyUserIsLoggedIn()
     }
 
 
@@ -74,7 +66,6 @@ companion object{
 
                 latestMessagesMap[p0.key!!] = chatmessage
                 refreshRecyclerViewMessages()
-//                adapter.add(Latestmessege(chatmessage))
 
             }
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
@@ -103,16 +94,6 @@ companion object{
 
     val adapter = GroupAdapter<ViewHolder>()
 
-//    private fun setupDummyRows(){
-//
-//
-//
-//        adapter.add(Latestmessege())
-//
-//        adapter.add(Latestmessege())
-//        adapter.add(Latestmessege())
-//        adapter.add(Latestmessege())
-//    }
     private fun verifyUserIsLoggedIn(){
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null){

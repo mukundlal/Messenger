@@ -30,7 +30,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
     val adapter = GroupAdapter<ViewHolder>()
-    val toUser : User? = null
+    var uid :String ? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +41,8 @@ class ChatLogActivity : AppCompatActivity() {
         recycler_view_chat_log.adapter = adapter
 
         val username = intent.getStringExtra(NewMessegeActivity.USER_KEY)
+        //FIXME New variable introduced
+        uid = intent.getStringExtra(NewMessegeActivity.USER_ID_KEY)
         supportActionBar?.title = username
 
         //ok
@@ -56,7 +58,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     private  fun ListenForMessages(){
         val fromId = FirebaseAuth.getInstance().uid
-        val toId = toUser?.uid
+        val toId = uid
 
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 
@@ -65,13 +67,14 @@ class ChatLogActivity : AppCompatActivity() {
 
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
                 val chatmessage = p0.getValue(ChatMessage::class.java)
 
                 if (chatmessage != null){
 
                     Log.d(TAG, chatmessage.text)
 
-                    if (chatmessage.fromId == FirebaseAuth.getInstance().uid){
+                    if (chatmessage.fromId != FirebaseAuth.getInstance().uid){
 
                         adapter.add(ChatFromItem(chatmessage.text))
 
@@ -87,6 +90,7 @@ class ChatLogActivity : AppCompatActivity() {
 
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
+
 
             override fun onCancelled(p0: DatabaseError) {
 
@@ -120,7 +124,7 @@ class ChatLogActivity : AppCompatActivity() {
         if (fromId == null) return
 
 //        val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
-                val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         val to_reference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
         val chatmessage = ChatMessage(reference.key!!, text, fromId, toId, System.currentTimeMillis()/1000)
@@ -131,7 +135,11 @@ class ChatLogActivity : AppCompatActivity() {
                 edittext_chat_log.text.clear()
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
-to_reference.setValue(chatmessage)
+            .addOnFailureListener {
+                Log.d(TAG, "NotSaved ${it.message}")
+            }
+        to_reference.setValue(chatmessage)
+
 
         val latestMessegeRef = FirebaseDatabase.getInstance().getReference("/latest-messeges/$fromId/$toId")
         latestMessegeRef.setValue(chatmessage)

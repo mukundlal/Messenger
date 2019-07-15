@@ -26,10 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         already_registered_textview.setOnClickListener {
             Log.d("RegisterActivity", "Try to show login activity")
-
-            //launch the activity somehow
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            finish()
         }
     }
     private fun performRegister(){
@@ -91,6 +88,11 @@ class RegisterActivity : AppCompatActivity() {
                 val intent = Intent(this, LatestMessegeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+                //FIXME Commented code is for intenting to loginscreen but i dont think we need that
+                //user need to go to chat after reg
+                //val intent = Intent(this, LoginActivity::class.java)
+                //
+                //                startActivity(intent)
 
             }
             .addOnFailureListener {

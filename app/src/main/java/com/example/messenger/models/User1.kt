@@ -5,6 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
-class User(val uid:String, val username:String):Parcelable{
+//FIXME user class name changed to User1
+//i dont know if we need this class?
+class User1(val uid:String, val username:String):Parcelable{
     constructor(): this("","")
 }
