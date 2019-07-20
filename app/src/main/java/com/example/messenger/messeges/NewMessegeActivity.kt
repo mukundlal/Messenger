@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.example.messenger.R
 import com.example.messenger.messeges.ChatLogActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -56,9 +57,12 @@ class NewMessegeActivity : AppCompatActivity() {
                  Log.d("NewMessege", it.toString())
 
                  val user = it.getValue(User::class.java)
-                 if (user != null){
-                     adapter.add(UserItem(user))
+                 if (user != null) {
+                     //FIXME Showing the list expt current user
+                     if (FirebaseAuth.getInstance().uid != user.uid) {
+                         adapter.add(UserItem(user))
                      }
+                 }
              }
 
                 adapter.setOnItemClickListener { item, view ->
@@ -66,7 +70,6 @@ class NewMessegeActivity : AppCompatActivity() {
 
                     val intent =Intent(view.context, ChatLogActivity::class.java )
                     intent.putExtra(USER_KEY, userItem.user.username)
-
                     intent.putExtra(USER_ID_KEY, userItem.user.uid)
                     startActivity(intent)
 

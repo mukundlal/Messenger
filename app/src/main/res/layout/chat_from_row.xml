@@ -11,25 +11,13 @@
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:id="@+id/textview_from_row"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:background="#E0F0D5"
             android:padding="16dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.303" android:layout_marginTop="24dp"/>
-    <TextView
-            android:text="me"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:paddingTop="20dp"
-            android:textStyle="bold"
-            android:paddingLeft="8dp"
-            android:id="@+id/textView2" app:layout_constraintEnd_toStartOf="@+id/textview_from_row"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="@+id/textview_from_row"
-            app:layout_constraintTop_toTopOf="@+id/textview_from_row" android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,12 @@
 package com.example.messenger.messeges
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.AutoText
 import android.util.Log
+import androidx.core.net.toFile
 import com.example.messenger.NewMessegeActivity
 import com.example.messenger.R
 import com.example.messenger.User
@@ -13,6 +16,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -21,6 +25,7 @@ import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.textview_from_row
 import java.sql.Timestamp
+import java.util.*
 
 class ChatLogActivity : AppCompatActivity() {
 
@@ -30,7 +35,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
     val adapter = GroupAdapter<ViewHolder>()
-    val toUser : User? = null
+    var uid :String ? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,22 +46,70 @@ class ChatLogActivity : AppCompatActivity() {
         recycler_view_chat_log.adapter = adapter
 
         val username = intent.getStringExtra(NewMessegeActivity.USER_KEY)
+        //FIXME New variable introduced
+        uid = intent.getStringExtra(NewMessegeActivity.USER_ID_KEY)
         supportActionBar?.title = username
 
         //ok
 
 //     setupDummyData()
         ListenForMessages()
+
+        SelectFileMessages()
+
         send_button_chat_log.setOnClickListener {
             Log.d(TAG,"Attempt to send message......")
-            performSendMessage()
+            if (edittext_chat_log == null){
+
+                performFileSendMessage()
+            }
+            else{
+                performSendMessage()
+            }
+        }
+
+
+
+
+    }
+private fun SelectFileMessages(){
+        upload_any_file_button.setOnClickListener {
+            Log.d(TAG,"Attempt to send file......")
+            val intent = Intent ()
+                .setType("*/*")
+                .setAction(Intent.ACTION_GET_CONTENT)
+
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
+
+        }
+
+}
+    var selectedFileUri: Uri? = null
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 111 && resultCode == RESULT_OK) {
+            val selectedFileUri = data?.data //The uri with the location of the file
+            Log.d(TAG, "File path is :$selectedFileUri")
+
         }
     }
+private fun performFileSendMessage(){
+if (selectedFileUri == null) return
+    Log.d(TAG, "I am inside perform send file msgs!")
+    val ref = FirebaseStorage.getInstance().getReference("/all-files")
 
-
+    ref.putFile(selectedFileUri!!)
+        .addOnSuccessListener {
+            Log.d(TAG, "Successfully uploaded file!!..:${it.metadata?.path}")
+        }.addOnFailureListener {
+            Log.d(TAG, "Failed to upload!!")
+        }
+}
     private  fun ListenForMessages(){
         val fromId = FirebaseAuth.getInstance().uid
-        val toId = toUser?.uid
+        val toId = uid
 
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 
@@ -65,13 +118,14 @@ class ChatLogActivity : AppCompatActivity() {
 
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
                 val chatmessage = p0.getValue(ChatMessage::class.java)
 
                 if (chatmessage != null){
 
                     Log.d(TAG, chatmessage.text)
 
-                    if (chatmessage.fromId == FirebaseAuth.getInstance().uid){
+                    if (chatmessage.fromId != FirebaseAuth.getInstance().uid){
 
                         adapter.add(ChatFromItem(chatmessage.text))
 
@@ -87,6 +141,7 @@ class ChatLogActivity : AppCompatActivity() {
 
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
+
 
             override fun onCancelled(p0: DatabaseError) {
 
@@ -120,7 +175,7 @@ class ChatLogActivity : AppCompatActivity() {
         if (fromId == null) return
 
 //        val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
-                val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         val to_reference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
         val chatmessage = ChatMessage(reference.key!!, text, fromId, toId, System.currentTimeMillis()/1000)
@@ -131,7 +186,11 @@ class ChatLogActivity : AppCompatActivity() {
                 edittext_chat_log.text.clear()
                 recycler_view_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
-to_reference.setValue(chatmessage)
+            .addOnFailureListener {
+                Log.d(TAG, "NotSaved ${it.message}")
+            }
+        to_reference.setValue(chatmessage)
+
 
         val latestMessegeRef = FirebaseDatabase.getInstance().getReference("/latest-messeges/$fromId/$toId")
         latestMessegeRef.setValue(chatmessage)
