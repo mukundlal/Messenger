@@ -41,7 +41,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-firestore:20.1.0'
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation 'com.google.firebase:firebase-database:18.0.0'
     implementation 'com.google.firebase:firebase-storage:18.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -49,6 +49,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'com.xwray:groupie:2.3.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.scottyab:aescrypt:0.0.1'
+    implementation 'com.facebook.conceal:conceal:2.0.1@aar'
+
 
 
 }

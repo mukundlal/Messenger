@@ -20,7 +20,7 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_latest_messege.*
 import kotlinx.android.synthetic.main.latest_messege_row.view.*
 
-class LatestMessegeActivity : AppCompatActivity() {
+class  LatestMessegeActivity : AppCompatActivity() {
 companion object{
     var TAG = "LatestMessages"
 }
@@ -34,7 +34,6 @@ companion object{
             Log.d(TAG, "123")
             val intent = Intent (this, ChatLogActivity::class.java)
             val row = item as Latestmessege
-            //FIXME put string parameter changed
             intent.putExtra(USER_KEY, row.chatPartnerUser!!.username)
             intent.putExtra(USER_ID_KEY, row.chatPartnerUser!!.uid)
             startActivity(intent)
@@ -62,6 +61,7 @@ companion object{
         ref.addChildEventListener(object :ChildEventListener{
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
                 val chatmessage = p0.getValue(ChatMessage::class.java) ?: return
 
                 latestMessagesMap[p0.key!!] = chatmessage
